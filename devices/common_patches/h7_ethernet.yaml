@@ -3,6 +3,8 @@ _modify:
     name: Ethernet_DMA
     baseAddress: 0x40029000
     description: "Ethernet: DMA controller operation"
+_include:
+  - "../../peripherals/eth/eth2_dma.yaml"
 _add:
   Ethernet_MTL:
     description: "Ethernet: MAC Transaction Layer"

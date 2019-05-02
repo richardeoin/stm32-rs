@@ -1,0 +1,176 @@
+# Ethernet DMA for H7
+
+"Ethernet_DMA":
+  DMAMR:
+    INTM:
+      SatusAndInterrupt: [0, "Set transfer complete status bits, and assert corresponding interrupts"]
+      StatusOnly: [1, "Set transfer complete status bits"]
+      StatusOnlySetAgain: [2, "Set transfer complete status bits. Set again if another event occours before the first was serviced"]
+    PR:
+      PR1: [0, "The priority ratio is 1:1"]
+      PR2: [1, "The priority ratio is 2:1"]
+      PR3: [2, "The priority ratio is 3:1"]
+      PR4: [3, "The priority ratio is 4:1"]
+      PR5: [4, "The priority ratio is 5:1"]
+      PR6: [5, "The priority ratio is 6:1"]
+      PR7: [6, "The priority ratio is 7:1"]
+      PR8: [7, "The priority ratio is 8:1"]
+    TXPR:
+      RxPriority: [0, "The Rx DMA has higher priority during arbitration"]
+      TxPriority: [1, "The Tx DMA has higher priority during arbitration"]
+    DA:
+      RoundRobin: [0, "Round-robin with Rx:Tx priority ratio given by PR"]
+      FixedPriority: [1, "Constant priority is given based on the TXPR bit"]
+    SWR:
+      Reset: [1, "Reset all DMA, MTL and MAC internal registers and logic. Cleared automatically"]
+    _modify:
+      INTM:
+        bitWidth: 2
+
+  DMASBMR:
+    MB:
+      Normal: [0, "Fixed burst transfers (INCRx and SINGLE) for burst lengths of 16 and below"]
+      Mixed: [1, "If FB is low, start all bursts greater than 16 with INCR (undefined burst)"]
+    AAL:
+      Unaligned: [0, "Bursts are not aligned"]
+      Aligned: [1, "Master performs aligned bursts on Read and Write channels"]
+    FB:
+      Variable: [0, "AHB uses SINGLE and INCR burst transfers"]
+      Fixed: [1, "AHB uses only fixed burst transfers"]
+
+  DMADSR:
+    TPS0:
+      Stopped: [0, "Stopped, Reset or Stop Transmit command issued"]
+      RunningFetching: [1, "Running, fetching transmit transfer descriptor"]
+      RunningWaiting: [2, "Running, waiting for status"]
+      RunningReading: [3, "Running, reading data from host memory buffer"]
+      RunningTimestamp: [4, "Running, writing timestamp"]
+      Suspended: [6, "Suspended, transmit descriptor unavailable or transmit buffer underflow"]
+      Running: [7, "Running, closing transmit descriptor"]
+    RPS0:
+      Stopped: [0, "Stopped, reset or Stop Receive command issued"]
+      RunningFetching: [1, "Running, fetching receive transfer descriptor"]
+      RunningWaiting: [3, "Running, waiting for receive packet"]
+      Suspended: [4, "Suspended, receive descriptor unavailable"]
+      Running: [5, "Running, closing receive descriptor"]
+      RunningTimestamp: [6, "Running, writing timestamp"]
+      RunningWriting: [7, "Running, writing data to host memory buffer"]
+
+  DMACCR:
+    DSL: [0, 0x7]
+    PBLX8:
+      x1: [0, "PBL values used as-is"]
+      x8: [1, "PBL values multiplied by 8"]
+
+  DMACTxCR:
+    TXPBL:
+      PBL1: [1, "Maximum of 1 beat per DMA transaction"]
+      PBL2: [2, "Maximum of 2 beats per DMA transaction"]
+      PBL4: [4, "Maximum of 4 beats per DMA transaction"]
+      PBL8: [8, "Maximum of 8 beats per DMA transaction"]
+      PBL16: [16, "Maximum of 16 beats per DMA transaction"]
+      PBL32: [32, "Maximum of 32 beats per DMA transaction"]
+    TSE:
+      SegmentationOff: [0, "Do not perform TCP segmentation"]
+      SegmentationOn: [1, "Perform TCP segmentation for those packets for which the TSE bit is set"]
+    OSF:
+      WaitForComplete: [0, "Wait for packet to be read completely"]
+      Process2nd: [1, "Simultaneously aquire a 2nd packet without closing the status descriptor of the 1st"]
+    ST:
+      Stopped: [0, "Transmission is placed in the Stopped state"]
+      Started: [1, "Transmission is placed in Running state"]
+
+  DMACRxCR:
+    RPF:
+      NoFlush: [0, "Do not flush the packet from the Rx queues when the DMA channel stops after a system bus error"]
+      Flush: [1, "Flush the packet from the Rx queues when the DMA channel stops after a system bus error"]
+    RXPBL:
+      PBL1: [1, "Maximum of 1 beat per DMA transaction"]
+      PBL2: [2, "Maximum of 2 beats per DMA transaction"]
+      PBL4: [4, "Maximum of 4 beats per DMA transaction"]
+      PBL8: [8, "Maximum of 8 beats per DMA transaction"]
+      PBL16: [16, "Maximum of 16 beats per DMA transaction"]
+      PBL32: [32, "Maximum of 32 beats per DMA transaction"]
+    SR:
+      Stopped: [0, "Reception is stopped after transfer of the current frame"]
+      Started: [1, "Reception is placed in the Running state"]
+
+  DMACTxDLAR:
+    TDESLA: [0, 0xFFFFFFFF]
+    _modify:
+      TDESLA:
+        description: Start of transmit list
+        bitOffset: 0
+        bitWidth: 32
+
+  DMACRxDLAR:
+    RDESLA: [0, 0xFFFFFFFF]
+    _modify:
+      RDESLA:
+        description: Start of receive list
+        bitOffset: 0
+        bitWidth: 32
+
+  DMACTxDTPR:
+    TDT: [0, 0xFFFFFFFF]
+    _modify:
+      TDT:
+        description: Transmit list tail pointer
+        bitOffset: 0
+        bitWidth: 32
+
+  DMACRxDTPR:
+    RDT: [0, 0xFFFFFFFF]
+    _modify:
+      RDT:
+        description: Receieve list tail pointer
+        bitOffset: 0
+        bitWidth: 32
+
+  DMACTxRLR:
+    TDRL: [0, 0x3FF]
+
+  DMACRxRLR:
+    RDRL: [0, 0x3FF]
+
+  DMACRxIWTR:
+    RWT: [0, 0xFF]
+    _modify:
+      RWT:
+        description: Receive status watchdog timer count
+
+  _modify:
+    DMACCATxDR:
+      access: read-only
+    DMACCARxDR:
+      access: read-only
+    DMACCATxBR:
+      access: read-only
+    DMACCARxBR:
+      access: read-only
+
+  DMACCATxDR:
+    _modify:
+      CURTDESAPTR:
+        description: Host transmit descriptor address pointer
+
+  DMACCARxDR:
+    _modify:
+      CURRDESAPTR:
+        description: Host receive descriptor address pointer
+
+  DMACCATxBR:
+    _modify:
+      CURTBUFAPTR:
+        description: Host transmit buffer address pointer
+
+  DMACCARxBR:
+    _modify:
+      CURRBUFAPTR:
+        description: Host receive buffer address pointer
+
+  DMACSR:
+    NIS:
+      Clear: [1, "Clear normal interrupt summary bit"]
+    AIS:
+      Clear: [1, "Clear abnormal interrupt summary bit"]
