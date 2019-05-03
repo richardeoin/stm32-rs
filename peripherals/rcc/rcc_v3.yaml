@@ -4,11 +4,6 @@
 
 RCC:
   CR:
-    _modify:
-      RC48ON:
-        name: HSI48ON
-      RC48RDY:
-        name: HSI48RDY
     HSIDIVF:
       _read:
         NotPropagated: [0, "New HSIDIV ratio has not yet propagated to hsi_ck"]
@@ -35,17 +30,9 @@ RCC:
       CSICAL: [0, 0xFF]
       HSICAL: [0, 0xFFF]
   CRRCR:
-    _modify:
-      RC48CAL:
-        name: HSI48CAL
     _read:
       HSI48CAL: [0, 0x3FF]
   CFGR:
-    _modify:
-      MCO1SEL:
-        name: MCO1
-      MCO2SEL:
-        name: MCO2
     MCO2:
       SYS: [0, "System clock selected for micro-controller clock output"]
       PLL2: [1, "PLL2 selected for micro-controller clock output"]
@@ -72,31 +59,13 @@ RCC:
       HSE: [2, "HSE selected as system clock"]
       PLL1: [3, "PLL1 selected as system clock"]
   CIER:
-    _modify:
-      RC48RDYIE:
-        name: HSI48RDYIE
     "*IE":
       Disabled: [0, "Interrupt disabled"]
       Enabled: [1, "Interrupt enabled"]
-  _modify:
-    CIFR:
-      access: read-only
-  CIFR:
-    _modify:
-      RC48RDYF:
-        name: HSI48RDYF
   CICR:
-    _modify:
-      RC48RDYC:
-        name: HSI48RDYC
     "*C":
       Clear: [1, "Clear interrupt flag"]
   BDCR:
-    _modify:
-      VSWRST:
-        name: BDRST
-      RTCSRC:
-        name: RTCSEL
     BDRST:
       Reset: [1, "Resets the entire VSW domain"]
     RTCEN:
@@ -132,10 +101,6 @@ RCC:
     LSION:
       "Off": [0, "LSI oscillator Off"]
       "On": [1, "LSI oscillator On"]
-  APB1LRSTR:
-    _modify:
-      HDMICECRST:
-        name: CECRST
   "A?B?RSTR,A?B??RSTR":
     "*RST":
       Reset: [1, "Reset the selected module"]
@@ -144,9 +109,6 @@ RCC:
       Clear: [0, "Clear WWDG1 scope control"]
       Set: [1, "Set WWDG1 scope control"]
   D3AMR:
-    _modify:
-      BKPSRAMAMEN:
-        name: BKPRAMAMEN
     "*AMEN":
       Disabled: [0, "Clock disabled in autonomous mode"]
       Enabled: [1, "Clock enabled in autonomous mode"]
@@ -158,54 +120,10 @@ RCC:
     RMVF:
       NotActive: [0, "Not clearing the the reset flags"]
       Clear: [1, "Clear the reset flags"]
-  APB1LENR,C1_APB1LENR:
-    _modify:
-      HDMICECEN:
-        name: CECEN
-  AHB1ENR,C1_AHB1ENR:
-    _modify:
-      USB1OTGEN:
-        name: USB1OTGHSEN
-      USB2OTGEN:
-        name: USB2OTGHSEN
-      USB1ULPIEN:
-        name: USB1OTGHSULPIEN
-      USB2ULPIEN:
-        name: USB2OTGHSULPIEN
-        bitOffset: 18
-  AHB2ENR,C1_AHB2ENR:
-    _modify:
-      CAMITFEN:
-        name: DCMIEN
-        description: "DCMI peripheral clock"
   "A?B?ENR,A?B??ENR,C1_A?B?ENR,C1_A?B??ENR":
     "*EN":
       Disabled: [0, "The selected clock is disabled"]
       Enabled: [1, "The selected clock is enabled"]
-  APB1LLPENR,C1_APB1LLPENR:
-    _modify:
-      HDMICECLPEN:
-        name: CECLPEN
-  AHB1LPENR,C1_AHB1LPENR:
-    _modify:
-      USB1OTGLPEN:
-        name: USB1OTGHSLPEN
-      USB2OTGLPEN:
-        name: USB2OTGHSLPEN
-      USB1ULPILPEN:
-        name: USB1OTGHSULPILPEN
-      USB2ULPILPEN:
-        name: USB2OTGHSULPILPEN
-  AHB2LPENR,C1_AHB2LPENR:
-    _modify:
-      CAMITFLPEN:
-        name: DCMILPEN
-        description: "DCMI peripheral clock enable during csleep mode"
-  AHB3LPENR,C1_AHB3LPENR:
-    _modify:
-      FLITFLPEN:
-        name: FLASHPREN
-        description: "Flash interface clock enable during csleep mode"
   "A?B?LPENR,A?B??LPENR,C1_A?B?LPENR,C1_A?B??LPENR":
     "*LPEN":
       Disabled: [0, "The selected clock is disabled during csleep mode"]
