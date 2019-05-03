@@ -1,0 +1,43 @@
+# Revision V of H7 has HSICFGR / CSICFGR instead of ICSCR. Not clear
+# if this patch might apply to other families.
+
+# Does not apply to Revsion Y of H7
+
+RCC:
+  _delete:
+    ICSCR
+  _add:
+    HSICFGR:
+      description: RCC HSI configuration register
+      addressOffset: 0x0004
+      access: read-write
+      fields:
+        HSITRIM:
+          description: HSI clock trimming
+          bitOffset: 24
+          bitWidth: 7
+        HSICAL:
+          description: HSI clock calibration
+          bitOffset: 0
+          bitWidth: 12
+    CSICFGR:
+      description: RCC CSI configuration register
+      addressOffset: 0x000C
+      access: read-write
+      fields:
+        CSITRIM:
+          description: CSI clock trimming
+          bitOffset: 24
+          bitWidth: 6
+        CSICAL:
+          description: CSI clock calibration
+          bitOffset: 0
+          bitWidth: 9
+  HSICFGR:
+    HSITRIM: [0, 0x7F]
+    _read:
+      HSICAL: [0, 0xFFF]
+  CSICFGR:
+    CSITRIM: [0, 0x3F]
+    _read:
+      CSICAL: [0, 0x1FF]

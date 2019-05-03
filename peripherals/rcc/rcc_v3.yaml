@@ -1,0 +1,212 @@
+# Applicable at least to H7
+
+# Fresh start - even fields from rcc_common are quite different
+
+RCC:
+  CR:
+    _modify:
+      RC48ON:
+        name: HSI48ON
+      RC48RDY:
+        name: HSI48RDY
+    HSIDIVF:
+      _read:
+        NotPropagated: [0, "New HSIDIV ratio has not yet propagated to hsi_ck"]
+        Propagated: [1, "HSIDIV ratio has propagated to hsi_ck"]
+    HSEBYP:
+      NotBypassed: [0, "HSE crystal oscillator not bypassed"]
+      Bypassed: [1, "HSE crystal oscillator bypassed with external clock"]
+    HSIDIV:
+      Div1: [0, "No division"]
+      Div2: [1, "Division by 2"]
+      Div4: [2, "Division by 4"]
+      Div8: [3, "Division by 8"]
+    "*RDY":
+      _read:
+        NotReady: [0, "Clock not ready"]
+        Ready: [1, "Clock ready"]
+    "*ON":
+      "Off": [0, "Clock Off"]
+      "On": [1, "Clock On"]
+  ICSCR:
+    CSITRIM: [0, 0x1F]
+    HSITRIM: [0, 0x3F]
+    _read:
+      CSICAL: [0, 0xFF]
+      HSICAL: [0, 0xFFF]
+  CRRCR:
+    _modify:
+      RC48CAL:
+        name: HSI48CAL
+    _read:
+      HSI48CAL: [0, 0x3FF]
+  CFGR:
+    _modify:
+      MCO1SEL:
+        name: MCO1
+      MCO2SEL:
+        name: MCO2
+    MCO2:
+      SYS: [0, "System clock selected for micro-controller clock output"]
+      PLL2: [1, "PLL2 selected for micro-controller clock output"]
+      HSE: [2, "HSE selected for micro-controller clock output"]
+      PLL1: [3, "PLL1 selected for micro-controller clock output"]
+      CSI: [4, "CSI selected for micro-controller clock output"]
+      LSI: [5, "LSI selected for micro-controller clock output"]
+    MCO1:
+      HSI: [0, "HSI selected for micro-controller clock output"]
+      LSE: [1, "LSE selected for micro-controller clock output"]
+      HSE: [2, "HSE selected for micro-controller clock output"]
+      PLL1: [3, "PLL1 selected for micro-controller clock output"]
+      HSI48: [4, "HSI48 selected for micro-controller clock output"]
+    MCO?PRE: [0, 15]
+    SWS:
+      _read:
+        HSI: [0, "HSE oscillator used as system clock"]
+        CSI: [1, "CSI oscillator used as system clock"]
+        HSE: [2, "HSI oscillator used as system clock"]
+        PLL1: [3, "PLL1 used as system clock"]
+    SW:
+      HSI: [0, "HSI selected as system clock"]
+      CSI: [1, "CSI selected as system clock"]
+      HSE: [2, "HSE selected as system clock"]
+      PLL1: [3, "PLL1 selected as system clock"]
+  CIER:
+    _modify:
+      RC48RDYIE:
+        name: HSI48RDYIE
+    "*IE":
+      Disabled: [0, "Interrupt disabled"]
+      Enabled: [1, "Interrupt enabled"]
+  _modify:
+    CIFR:
+      access: read-only
+  CIFR:
+    _modify:
+      RC48RDYF:
+        name: HSI48RDYF
+  CICR:
+    _modify:
+      RC48RDYC:
+        name: HSI48RDYC
+    "*C":
+      Clear: [1, "Clear interrupt flag"]
+  BDCR:
+    _modify:
+      VSWRST:
+        name: BDRST
+      RTCSRC:
+        name: RTCSEL
+    BDRST:
+      Reset: [1, "Resets the entire VSW domain"]
+    RTCEN:
+      Disabled: [0, "RTC clock disabled"]
+      Enabled: [1, "RTC clock enabled"]
+    RTCSEL:
+      NoClock: [0, "No clock"]
+      LSE: [1, "LSE oscillator clock used as RTC clock"]
+      LSI: [2, "LSI oscillator clock used as RTC clock"]
+      HSE: [3, "HSE oscillator clock divided by a prescaler used as RTC clock"]
+    LSECSSD:
+      _read:
+        NoFailure: [0, "No failure detected on 32 kHz oscillator"]
+        Failure: [1, "Failure detected on 32 kHz oscillator"]
+    LSECSSON:
+      SecurityOff: [0, "Clock security system on 32 kHz oscillator off"]
+      SecurityOn: [1, "Clock security system on 32 kHz oscillator on"]
+    LSEBYP:
+      NotBypassed: [0, "LSE crystal oscillator not bypassed"]
+      Bypassed: [1, "LSE crystal oscillator bypassed with external clock"]
+    LSERDY:
+      _read:
+        NotReady: [0, "LSE oscillator not ready"]
+        Ready: [1, "LSE oscillator ready"]
+    LSEON:
+      "Off": [0, "LSE oscillator Off"]
+      "On": [1, "LSE oscillator On"]
+  CSR:
+    LSIRDY:
+      _read:
+        NotReady: [0, "LSI oscillator not ready"]
+        Ready: [1, "LSI oscillator ready"]
+    LSION:
+      "Off": [0, "LSI oscillator Off"]
+      "On": [1, "LSI oscillator On"]
+  APB1LRSTR:
+    _modify:
+      HDMICECRST:
+        name: CECRST
+  "A?B?RSTR,A?B??RSTR":
+    "*RST":
+      Reset: [1, "Reset the selected module"]
+  GCR:
+    WW1RSC:
+      Clear: [0, "Clear WWDG1 scope control"]
+      Set: [1, "Set WWDG1 scope control"]
+  D3AMR:
+    _modify:
+      BKPSRAMAMEN:
+        name: BKPRAMAMEN
+    "*AMEN":
+      Disabled: [0, "Clock disabled in autonomous mode"]
+      Enabled: [1, "Clock enabled in autonomous mode"]
+  RSR,C1_RSR:
+    "*RSTF":
+      _read:
+        NoResetOccoured: [0, "No reset occoured for block"]
+        ResetOccourred: [1, "Reset occoured for block"]
+    RMVF:
+      NotActive: [0, "Not clearing the the reset flags"]
+      Clear: [1, "Clear the reset flags"]
+  APB1LENR,C1_APB1LENR:
+    _modify:
+      HDMICECEN:
+        name: CECEN
+  AHB1ENR,C1_AHB1ENR:
+    _modify:
+      USB1OTGEN:
+        name: USB1OTGHSEN
+      USB2OTGEN:
+        name: USB2OTGHSEN
+      USB1ULPIEN:
+        name: USB1OTGHSULPIEN
+      USB2ULPIEN:
+        name: USB2OTGHSULPIEN
+        bitOffset: 18
+  AHB2ENR,C1_AHB2ENR:
+    _modify:
+      CAMITFEN:
+        name: DCMIEN
+        description: "DCMI peripheral clock"
+  "A?B?ENR,A?B??ENR,C1_A?B?ENR,C1_A?B??ENR":
+    "*EN":
+      Disabled: [0, "The selected clock is disabled"]
+      Enabled: [1, "The selected clock is enabled"]
+  APB1LLPENR,C1_APB1LLPENR:
+    _modify:
+      HDMICECLPEN:
+        name: CECLPEN
+  AHB1LPENR,C1_AHB1LPENR:
+    _modify:
+      USB1OTGLPEN:
+        name: USB1OTGHSLPEN
+      USB2OTGLPEN:
+        name: USB2OTGHSLPEN
+      USB1ULPILPEN:
+        name: USB1OTGHSULPILPEN
+      USB2ULPILPEN:
+        name: USB2OTGHSULPILPEN
+  AHB2LPENR,C1_AHB2LPENR:
+    _modify:
+      CAMITFLPEN:
+        name: DCMILPEN
+        description: "DCMI peripheral clock enable during csleep mode"
+  AHB3LPENR,C1_AHB3LPENR:
+    _modify:
+      FLITFLPEN:
+        name: FLASHPREN
+        description: "Flash interface clock enable during csleep mode"
+  "A?B?LPENR,A?B??LPENR,C1_A?B?LPENR,C1_A?B??LPENR":
+    "*LPEN":
+      Disabled: [0, "The selected clock is disabled during csleep mode"]
+      Enabled: [1, "The selected clock is enabled during csleep mode"]
