@@ -23,12 +23,6 @@ RCC:
     "*ON":
       "Off": [0, "Clock Off"]
       "On": [1, "Clock On"]
-  ICSCR:
-    CSITRIM: [0, 0x1F]
-    HSITRIM: [0, 0x3F]
-    _read:
-      CSICAL: [0, 0xFF]
-      HSICAL: [0, 0xFFF]
   CRRCR:
     _read:
       HSI48CAL: [0, 0x3FF]
