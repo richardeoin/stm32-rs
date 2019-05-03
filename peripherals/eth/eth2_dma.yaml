@@ -1,6 +1,6 @@
-# Ethernet DMA for H7
+# Ethernet DMA for H7 and maybe others
 
-"Ethernet_DMA":
+Ethernet_DMA:
   DMAMR:
     INTM:
       SatusAndInterrupt: [0, "Set transfer complete status bits, and assert corresponding interrupts"]
@@ -23,10 +23,6 @@
       FixedPriority: [1, "Constant priority is given based on the TXPR bit"]
     SWR:
       Reset: [1, "Reset all DMA, MTL and MAC internal registers and logic. Cleared automatically"]
-    _modify:
-      INTM:
-        bitWidth: 2
-
   DMASBMR:
     MB:
       Normal: [0, "Fixed burst transfers (INCRx and SINGLE) for burst lengths of 16 and below"]
@@ -37,7 +33,6 @@
     FB:
       Variable: [0, "AHB uses SINGLE and INCR burst transfers"]
       Fixed: [1, "AHB uses only fixed burst transfers"]
-
   DMADSR:
     TPS0:
       Stopped: [0, "Stopped, Reset or Stop Transmit command issued"]
@@ -55,13 +50,11 @@
       Running: [5, "Running, closing receive descriptor"]
       RunningTimestamp: [6, "Running, writing timestamp"]
       RunningWriting: [7, "Running, writing data to host memory buffer"]
-
   DMACCR:
     DSL: [0, 0x7]
     PBLX8:
       x1: [0, "PBL values used as-is"]
       x8: [1, "PBL values multiplied by 8"]
-
   DMACTxCR:
     TXPBL:
       PBL1: [1, "Maximum of 1 beat per DMA transaction"]
@@ -79,7 +72,6 @@
     ST:
       Stopped: [0, "Transmission is placed in the Stopped state"]
       Started: [1, "Transmission is placed in Running state"]
-
   DMACRxCR:
     RPF:
       NoFlush: [0, "Do not flush the packet from the Rx queues when the DMA channel stops after a system bus error"]
@@ -94,51 +86,23 @@
     SR:
       Stopped: [0, "Reception is stopped after transfer of the current frame"]
       Started: [1, "Reception is placed in the Running state"]
-
   DMACTxDLAR:
     TDESLA: [0, 0xFFFFFFFF]
-    _modify:
-      TDESLA:
-        description: Start of transmit list
-        bitOffset: 0
-        bitWidth: 32
-
   DMACRxDLAR:
     RDESLA: [0, 0xFFFFFFFF]
-    _modify:
-      RDESLA:
-        description: Start of receive list
-        bitOffset: 0
-        bitWidth: 32
-
   DMACTxDTPR:
     TDT: [0, 0xFFFFFFFF]
-    _modify:
-      TDT:
-        description: Transmit list tail pointer
-        bitOffset: 0
-        bitWidth: 32
-
   DMACRxDTPR:
     RDT: [0, 0xFFFFFFFF]
-    _modify:
-      RDT:
-        description: Receieve list tail pointer
-        bitOffset: 0
-        bitWidth: 32
-
   DMACTxRLR:
     TDRL: [0, 0x3FF]
-
   DMACRxRLR:
     RDRL: [0, 0x3FF]
-
   DMACRxIWTR:
     RWT: [0, 0xFF]
     _modify:
       RWT:
         description: Receive status watchdog timer count
-
   _modify:
     DMACCATxDR:
       access: read-only
@@ -148,27 +112,22 @@
       access: read-only
     DMACCARxBR:
       access: read-only
-
   DMACCATxDR:
     _modify:
       CURTDESAPTR:
         description: Host transmit descriptor address pointer
-
   DMACCARxDR:
     _modify:
       CURRDESAPTR:
         description: Host receive descriptor address pointer
-
   DMACCATxBR:
     _modify:
       CURTBUFAPTR:
         description: Host transmit buffer address pointer
-
   DMACCARxBR:
     _modify:
       CURRBUFAPTR:
         description: Host receive buffer address pointer
-
   DMACSR:
     NIS:
       Clear: [1, "Clear normal interrupt summary bit"]

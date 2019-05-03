@@ -311,6 +311,31 @@ DMA1:
     "RG*CR":
       name: "RGCR%s"
 
+Ethernet_DMA:
+  DMACTxDLAR:
+    _modify:
+      TDESLA:
+        bitOffset: 0
+        bitWidth: 32
+
+  DMACRxDLAR:
+    _modify:
+      RDESLA:
+        bitOffset: 0
+        bitWidth: 32
+
+  DMACTxDTPR:
+    _modify:
+      TDT:
+        bitOffset: 0
+        bitWidth: 32
+
+  DMACRxDTPR:
+    _modify:
+      RDT:
+        bitOffset: 0
+        bitWidth: 32
+
 RCC:
   _modify:
     CIFR:
