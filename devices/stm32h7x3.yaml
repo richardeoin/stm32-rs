@@ -220,30 +220,12 @@ _modify:
       AFSEL15:
         name: AFR15
 
-# Make IWDG register consitant
-IWDG:
-  _strip:
-    - IWDG_
-
-"I2C*":
-  _strip:
-    - I2C_
-
-WWDG:
-  _modify:
-    WWDG_CR:
-      name: CR
-    WWDG_CFR:
-      name: CFR
-    WWDG_SR:
-      name: SR
-
 # Merge the hundreds of individual bit fields into single fields for the
 # crypt key/iv registers.
 CRYP:
   "K[0123][LR]R":
     _merge:
-      - "b*"
+      - "K*"
   "IV[01][LR]R":
     _merge:
       - "IV*"
@@ -260,10 +242,6 @@ FLASH:
     BOOT_PRGR:
       access: read-write
 
-PWR:
-  _strip:
-    - PWR_
-
 "SPI*":
   CR1:
     _modify:
@@ -277,9 +255,53 @@ PWR:
     _modify:
       DPXPIE:
         name: DXPIE
+        access: read-write
+      TXPIE:
+        access: read-write
   _modify:
     CGFR:
       name: I2SCFGR
+  CFG1:
+    _modify:
+      FTHVL:
+        name: FTHLV
+
+# Work around the DMA_STR? interrupt mess in the SVD.
+# Some interrupts are on DMA2 instead on DMA1 and/or called DMA_STR? without
+# the numeral.
+
+_delete:
+  - DMA2
+
+_add:
+  DMA2:
+    baseAddress: 0x40020400
+    derivedFrom: DMA1
+    interrupts:
+      DMA2_STR0:
+        value: 56
+        description: DMA2 Stream0
+      DMA2_STR1:
+        value: 57
+        description: DMA2 Stream1
+      DMA2_STR2:
+        value: 58
+        description: DMA2 Stream2
+      DMA2_STR3:
+        value: 59
+        description: DMA2 Stream3
+      DMA2_STR4:
+        value: 60
+        description: DMA2 Stream4
+      DMA2_STR5:
+        value: 68
+        description: DMA2 Stream5
+      DMA2_STR6:
+        value: 69
+        description: DMA2 Stream6
+      DMA2_STR7:
+        value: 70
+        description: DMA2 Stream7
 
 DMA1:
   _add:
@@ -308,39 +330,35 @@ DMA1:
       # DMA1_STR7 is correct
 
 "DMAMUX*":
-  _strip:
-    - DMAMUX1_
-    - DMAMUX2_
   _array:
     "C*CR":
       name: "CCR%s"
     "RG*CR":
       name: "RGCR%s"
+  CFR:
+    _split: [CSOF]
+  RGSR:
+    _split: [OF]
+  RGCFR:
+    _split: [COF]
 
 Ethernet_DMA:
-  DMACTxDLAR:
+  DMAMR:
     _modify:
-      TDESLA:
-        bitOffset: 0
-        bitWidth: 32
-
-  DMACRxDLAR:
+      INTM:
+        bitWidth: 2
+      PR:
+        access: read-write
+      TXPR:
+        access: read-write
+      DA:
+        access: read-write
+  DMASBMR:
     _modify:
-      RDESLA:
-        bitOffset: 0
-        bitWidth: 32
-
-  DMACTxDTPR:
-    _modify:
-      TDT:
-        bitOffset: 0
-        bitWidth: 32
-
-  DMACRxDTPR:
-    _modify:
-      RDT:
-        bitOffset: 0
-        bitWidth: 32
+      RB:
+        access: read-write
+      MB:
+        access: read-write
 
 RCC:
   _modify:
@@ -380,15 +398,7 @@ RCC:
         name: BDRST
       RTCSRC:
         name: RTCSEL
-  APB1LRSTR:
-    _modify:
-      HDMICECRST:
-        name: CECRST
-  D3AMR:
-    _modify:
-      BKPSRAMAMEN:
-        name: BKPRAMAMEN
-  APB1LENR,C1_APB1LENR:
+  C1_APB1LENR:
     _modify:
       HDMICECEN:
         name: CECEN
@@ -400,9 +410,8 @@ RCC:
         name: USB2OTGHSEN
       USB1ULPIEN:
         name: USB1OTGHSULPIEN
-      USB2ULPIEN:
-        name: USB2OTGHSULPIEN
-        bitOffset: 18
+    _delete:
+      - USB2ULPIEN
   AHB2ENR,C1_AHB2ENR:
     _modify:
       CAMITFEN:
@@ -412,7 +421,7 @@ RCC:
     _modify:
       HDMICECLPEN:
         name: CECLPEN
-  AHB1LPENR,C1_AHB1LPENR:
+  C1_AHB1LPENR:
     _modify:
       USB1OTGLPEN:
         name: USB1OTGHSLPEN
@@ -427,59 +436,25 @@ RCC:
       CAMITFLPEN:
         name: DCMILPEN
         description: "DCMI peripheral clock enable during csleep mode"
-  AHB3LPENR,C1_AHB3LPENR:
+  C1_AHB3LPENR:
     _modify:
       FLITFLPEN:
         name: FLASHPREN
         description: "Flash interface clock enable during csleep mode"
 
-COMP1:
-  _strip:
-    - COMP1_
-
-CRS:
-  _strip:
-    - CRS_
-
-DAC:
-  _strip:
-    - DAC_
-
-BDMA:
-  _strip:
-    - BDMA_
-
-DMA2D:
-  _strip:
-    - DMA2D_
-
-FMC:
-  _strip:
-    - FMC_
-
-CEC:
-  _strip:
-    - CEC_
+Ethernet_MAC:
+  MACLETR:
+    _modify:
+      LPIET:
+        bitOffset: 3
 
 HSEM:
   _strip:
     - HSEM_
 
-JPEG:
-  _strip:
-    - JPEG_
-
 MDMA:
   _strip:
     - MDMA_
-
-QUADSPI:
-  _strip:
-    - QUADSPI_
-
-RNG:
-  _strip:
-    - RNG_
 
 RTC:
   _strip:
@@ -488,14 +463,6 @@ RTC:
 SAI4:
   _strip:
     - SAI_
-
-SDMMC1:
-  _strip:
-    - SDMMC_
-
-VREFBUF:
-  _strip:
-    - VREFBUF_
 
 AXI:
   _strip:
@@ -509,15 +476,13 @@ FDCAN1:
   _strip:
     - FDCAN_
 
-MDIOS:
-  _strip:
-    - MDIOS_
-
 _include:
  - common_patches/4_nvic_prio_bits.yaml
  - common_patches/dma_fcr_wo.yaml
- - common_patches/h7_ethernet.yaml
+ - common_patches/dma/dma_v3.yaml
  - common_patches/h7_rcc_src_sel.yaml
+ - common_patches/h7_ethernet_desc.yaml
+ - common_patches/h7_dbgmcu.yaml
  - common_patches/merge_I2C_CR2_SADDx_fields.yaml
  - common_patches/merge_USART_CR1_DEATx_fields.yaml
  - common_patches/merge_USART_CR1_DEDTx_fields.yaml
@@ -527,6 +492,7 @@ _include:
  - common_patches/merge_USART_BRR_fields.yaml
  - common_patches/tim/tim_o24ce.yaml
  - ../peripherals/crc/crc_basic.yaml
+ - ../peripherals/dma/dmamux_v1.yaml
  - ../peripherals/gpio/gpio_v2.yaml
  - ../peripherals/rcc/rcc_h7.yaml
  - ../peripherals/rcc/rcc_h7_revision_y.yaml

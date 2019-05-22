@@ -3,12 +3,19 @@ language: rust
 rust:
   - stable
 
+branches:
+  only:
+    - staging
+    - trying
+    - master
+
 cache: cargo
 
 addons:
   apt:
     packages:
       - python3-pip
+      - python3-dev
 
 env:
   global:
@@ -27,6 +34,7 @@ env:
     - CRATES=stm32g0
 
 install:
+  - pip3 install --user setuptools wheel
   - pip3 install --user pyyaml
   - scripts/svd2rust_install.sh $SVD2RUST
   - rustup component add rustfmt
